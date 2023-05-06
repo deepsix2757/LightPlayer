@@ -17,11 +17,34 @@ document.querySelector(".song-input").addEventListener("change", (event) => {
             document.querySelector(".song-title").textContent = tag.tags.title;
             document.querySelector(".artist-name").textContent = tag.tags.artist;
             document.querySelector(".audio-control").src = songUrl;
-            //document.querySelector("#album").textContent = tag.tags.album;
-            //document.querySelector("#genre").textContent = tag.tags.genre;
+            document.querySelector(".lyric-box").textContent = tag.tags.lyrics.lyrics;
         },
         onError: function(error) {
             console.log(error)
         }
     });  
+});
+
+var loop_check = $("input:checkbox[id='loop-switch']");
+    loop_check.click(function(){
+    $("p").toggle();
+    console.log($("audio-control"));
+    var audio = document.getElementById("audio-controller");
+    console.log(audio.loop);
+    if(audio.loop === true)
+        audio.loop = false;
+    else
+        audio.loop = true;
+    console.log(audio.loop);
+});
+
+var lyric_check = $("input:checkbox[id='lyric-switch']");
+    lyric_check.click(function(){
+    $("p").toggle();
+    $(".lyric").toggle();
+});
+
+var shuffle_check = $("input:checkbox[id='shuffle-switch']");
+    shuffle_check.click(function(){
+    $("p").toggle();
 });
