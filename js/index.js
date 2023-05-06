@@ -44,6 +44,12 @@ var lyric_check = $("input:checkbox[id='lyric-switch']");
     $(".lyric").toggle();
 });
 
+var spectrum_check = $("input:checkbox[id='spectrum-switch']");
+    spectrum_check.click(function(){
+    $("p").toggle();
+    $(".spectrum").toggle();
+});
+
 var shuffle_check = $("input:checkbox[id='shuffle-switch']");
     shuffle_check.click(function(){
     $("p").toggle();
