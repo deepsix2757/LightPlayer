@@ -1,4 +1,9 @@
-var jsmediatags = window.jsmediatags;
+// playlist control
+const musicLst = document.querySelector(".list ol");
+let lstCnt = 0;
+// media control
+const jsmediatags = window.jsmediatags;
+
 document.querySelector(".song-input").addEventListener("change", (event) => {
     const song = event.target.files[0];
     const songUrl = URL.createObjectURL(song);
@@ -18,6 +23,18 @@ document.querySelector(".song-input").addEventListener("change", (event) => {
             document.querySelector(".artist-name").textContent = tag.tags.artist;
             document.querySelector(".audio-control").src = songUrl;
             document.querySelector(".lyric-box").textContent = tag.tags.lyrics.lyrics;
+            // add to playlist
+            lstCnt++;
+            let li = `
+                <li data-index="${lstCnt}">
+                    <div class="list_row upper">
+                        <div class="name">${tag.tags.title}</div>
+                        <div class="singer">${tag.tags.artist}</div>
+                        <div class="url" style="display:none;">${songUrl}</div>
+                    </div>
+                </li>
+            `;
+            musicLst.insertAdjacentHTML("beforeend", li);
         },
         onError: function(error) {
             console.log(error)
@@ -54,3 +71,5 @@ var shuffle_check = $("input:checkbox[id='shuffle-switch']");
     shuffle_check.click(function(){
     $("p").toggle();
 });
+
+

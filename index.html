@@ -76,31 +76,27 @@
 
                 </textarea>
             </div>
+            <div class="play_list neo">
+                <div class="title">
+                    <div>
+                        <span>List</span>
+                    </div>
+                </div>
+                <div class="list">
+                    <ol>
+
+                    </ol>
+                </div>
+            </div>
         </div>
         <div class="spectrum neo" style="display:none;">
             <div class="spectrum-canvas" id="spectum-analyzer">
             </div>
         </div>
+        
     </div>
-    
+
     <script type="text/javascript" src="./js/index.js"></script>
-    <script type="module">
-        import AudioMotionAnalyzer from 'https://cdn.skypack.dev/audiomotion-analyzer?min';
-
-        // audio source
-        const audioEl = document.getElementById('audio-controller');
-
-        // instantiate analyzer
-        const audioMotion = new AudioMotionAnalyzer(
-        document.getElementById('spectum-analyzer'),
-        {
-            source: audioEl,
-            height: 340,
-            mode: 3,
-            barSpace: .4,
-            ledBars: true,
-        }
-        );
-    </script>
+    <script type="module" src="./js/spectrum.js"></script>
 </body>
 </html>
