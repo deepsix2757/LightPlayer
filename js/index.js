@@ -8,17 +8,37 @@ let musicFiles = [];
 const audio_info = document.getElementById("audio-controller");
 const sourceLst = document.querySelector("audio");
 // playlist control
+const fileInput = document.querySelector(".song-input");
 const musicLst = document.querySelector(".list ol");
-let lstCnt = 0;
-let currIdx = 0;
+var lstCnt = 0;
+var currIdx = 0;
 // media control
 const jsmediatags = window.jsmediatags;
 
 // play event handling
+audio_info.addEventListener('playing', function(e){
+    // play next music if not loop mode
+    const musicLstItems = Array.from(document.getElementsByTagName("li"));
+    listPlaying(musicLstItems[currIdx]);
+}, false);
+
+const setRamdom = () => {
+    // console.log("shuffle lstCnt : " + lstCnt + ",Math.random() * lstCnt : " + Math.floor(Math.random() * lstCnt));
+    currIdx = Math.floor(Math.random() * lstCnt);
+    setMusic(musicFiles[currIdx], 1);
+}
+
 audio_info.addEventListener('ended', function(e){
     // play next music if not loop mode
-    if(audio_info.loop === false && currIdx + 1 < lstCnt){
-        setMusic(musicFiles[++currIdx], 1);
+    if(audio_info.loop === false){
+        // console.log("ended $(#shuffle-switch).is(:checked) " + $("#shuffle-switch").is(":checked"));
+        if($("#shuffle-switch").is(":checked")) {
+            setRamdom();
+        }
+        else if(currIdx + 1 < lstCnt){
+            setMusic(musicFiles[++currIdx], 1);
+        } 
+
         audio_info.autoplay = true;
     }
 }, false);
@@ -31,16 +51,14 @@ const listHighlight = (object) => {
     $(object).addClass('active');
 }
 
-// const setPlayItem = (idx) => {
-//     console.log($(".list_ol").parent().find("li.div.select"));
-//     console.log($(".list_ol").find("li[data-index=${idx}]"));
-//     $(".list_ol").parent().find("li.div.selected").removeClass("selected");
-//     $(".list_ol").find("li[data-index=${idx}]").addClass("selected");
-// }
+const listPlaying = (object) => {
+    $(object).parent().find('li.playing').removeClass('playing');
+    $(object).addClass('playing');
+}
 
 const itemEvent = () => {
     const musicLstItems = Array.from(document.getElementsByTagName("li"));
-    musicLstItems.forEach( ( row, index ) => {
+    musicLstItems.forEach((row, index) => {
         // click setting
         row.addEventListener("click", function(e){
             listHighlight($(this));
@@ -49,6 +67,7 @@ const itemEvent = () => {
         // double click setting
         row.addEventListener("dblclick", () => {
             // just set music info
+            // console.log("dblclick currIdx : " + currIdx + ", index : " + index );
             currIdx = index;
             setMusic(musicFiles[currIdx], 1);
             audio_info.autoplay = true;
@@ -66,7 +85,6 @@ const setMusic = (song, option) => {
     const songUrl = URL.createObjectURL(song);
     jsmediatags.read(song, {
         onSuccess: function(tag) {
-            //console.log(tag);
             // Array buffer to base64
             const data = tag.tags.picture.data;
             const format = tag.tags.picture.format;
@@ -85,13 +103,12 @@ const setMusic = (song, option) => {
                 document.querySelector(".lyric-box").textContent = (typeof tag.tags.lyrics === "undefined") ? "no lyrics" : tag.tags.lyrics.lyrics;
             }
             if(option === 0){
-                lstCnt++;
-
+                ++lstCnt;
                 // add to playlist window
                 let li = `
                     <li data-index="${lstCnt}">
                         <div class="list_row upper">
-                            // <div class="select" style="display:none;">▶</div>
+                            <div class="select" style="display:none;">▶</div>
                             <div class="name">${tag.tags.title}</div>
                             <div class="singer">${tag.tags.artist}</div>
                             <div id="music_url_${lstCnt}" class="url" style="display:none;">${songUrl}</div>
@@ -102,10 +119,6 @@ const setMusic = (song, option) => {
                 // add event listener
                 itemEvent();
             }
-            // if(lstCnt===1){
-            //     console.log("call setPlayItem");
-            //     setPlayItem(lstCnt);
-            // }
         },
         onError: function(error) {
             console.log(error)
@@ -114,14 +127,16 @@ const setMusic = (song, option) => {
 };
 
 // music add 
-document.querySelector(".song-input").addEventListener("change", (event) => {
-    const song = event.target.files[0];
-    musicFiles.push(song);
-    setMusic(song, 0);
+fileInput.addEventListener("change", (event) => {
+    const song = event.target.files;
+    for(let i = 0; i < song.length; ++i){
+        setMusic(song[i], 0);
+        musicFiles.push(song[i]);
+    }
 });
 
 // option change control
-var loop_check = $("input:checkbox[id='loop-switch']");
+const loop_check = $("#loop-switch");
 loop_check.click(function(){
     $("p").toggle();
     if(audio_info.loop === true)
@@ -130,7 +145,7 @@ loop_check.click(function(){
         audio_info.loop = true;
 });
 
-var lyric_check = $("input:checkbox[id='lyric-switch']");
+const lyric_check = $("#lyric-switch");
 lyric_check.click(function(){
     $("p").toggle();
     $(".lyric").toggle();
@@ -143,13 +158,15 @@ lyric_check.click(function(){
     document.getElementById("spectrum-win").style.width = spectrum_width + "px";
 });
 
-var spectrum_check = $("input:checkbox[id='spectrum-switch']");
+const spectrum_check = $("#spectrum-switch");
 spectrum_check.click(function(){
     $("p").toggle();
     $(".spectrum").toggle();
 });
 
-var shuffle_check = $("input:checkbox[id='shuffle-switch']");
+const shuffle_check = $("#shuffle-switch");
 shuffle_check.click(function(){
     $("p").toggle();
+    if(shuffle_check.is(":checked"))
+        setRamdom();
 });

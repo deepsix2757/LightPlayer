@@ -321,6 +321,11 @@ li {
   padding: 2em;
   display: flex;
   flex-direction: column;
+  /* for current playing */
+  .playing {
+    font-weight: bold;
+  }  
+  /* for mouse click */
   .active {
     background: #ffffff;
   }
