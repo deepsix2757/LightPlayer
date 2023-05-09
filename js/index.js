@@ -28,8 +28,8 @@ const setRamdom = () => {
     setMusic(musicFiles[currIdx], 1);
 }
 
-audio_info.addEventListener('ended', function(e){
-    // play next music if not loop mode
+
+const audioEnded = () => {
     if(audio_info.loop === false){
         // console.log("ended $(#shuffle-switch).is(:checked) " + $("#shuffle-switch").is(":checked"));
         if($("#shuffle-switch").is(":checked")) {
@@ -41,6 +41,11 @@ audio_info.addEventListener('ended', function(e){
 
         audio_info.autoplay = true;
     }
+}
+
+audio_info.addEventListener('ended', function(e){
+    // play next music if not loop mode
+    audioEnded();
 }, false);
 
 // play list control
@@ -170,3 +175,34 @@ shuffle_check.click(function(){
     if(shuffle_check.is(":checked"))
         setRamdom();
 });
+
+// keyboard shortcut add
+const docKeyup = (e) => {
+    switch (e.code){
+        /* p for play */
+        case "KeyP":
+            audio_info.play();
+            break;
+        /* s for stop */
+        case "KeyS":
+            audio_info.pause();
+            break;
+        /* n for next song */
+        case "KeyN":
+        case "ArrowRight":
+            audioEnded();
+            break;
+        /* b for before song */
+        case "KeyB":
+        case "ArrowLeft":
+            if(shuffle_check.is(":checked"))
+                setRamdom();
+            else if(currIdx > 0)
+                setMusic(musicFiles[--currIdx], 1);
+            break;
+        case "KeyO":
+            $("#file-input").click();
+            break;
+    }
+};
+document.addEventListener('keyup', docKeyup, false);
