@@ -12,5 +12,6 @@ const audioMotion = new AudioMotionAnalyzer(
         mode: 3,
         barSpace: .4,
         ledBars: true,
+        showScaleX: false
     }
 );
