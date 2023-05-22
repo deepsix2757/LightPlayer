@@ -1,3 +1,7 @@
+*:focus {
+  outline: 0;
+}
+
 body {
   padding: 0;
   margin: 0;
@@ -240,6 +244,9 @@ input:checked + .slider:before {
   padding: 1em;
   display: flex;
   flex-direction: column;
+  .lyric-switch-tab {
+    text-align: right;
+  }
   .lyric-box {
     font-size: 4.75em;
     width: 100%;
@@ -256,7 +263,6 @@ input:checked + .slider:before {
     .list_row{
       height: 10px;
       overflow: hidden;
-
     }
   }
 

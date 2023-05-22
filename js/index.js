@@ -14,12 +14,28 @@ var lstCnt = 0;
 var currIdx = 0;
 // media control
 const jsmediatags = window.jsmediatags;
+// lyric window
+const lyricBox = document.querySelector(".lyric-box");
+let intScroll = 0;
+
+const autoScroll = () => {
+    intScroll = setInterval(() => {
+        lyricBox.scrollTo(0, audio_info.currentTime / audio_info.duration * lyricBox.scrollHeight * 0.6);
+    }, 1000);
+    // console.log("intScroll : " + intScroll);
+};
+
 
 // play event handling
 audio_info.addEventListener('playing', function(e){
     // play next music if not loop mode
     const musicLstItems = Array.from(document.getElementsByTagName("li"));
     listPlaying(musicLstItems[currIdx]);
+
+    if(scroll_check.is(":checked"))
+        autoScroll();
+    else
+        clearInterval(intScroll);
 }, false);
 
 const setRamdom = () => {
@@ -175,6 +191,18 @@ shuffle_check.click(function(){
     if(shuffle_check.is(":checked"))
         setRamdom();
 });
+
+const scroll_check = $("#scroll-switch");
+scroll_check.click(function(){
+    $("p").toggle();
+    if(scroll_check.is(":checked"))
+        autoScroll();
+    else{
+        console.log("shuffle_check intScroll : " + intScroll);
+        clearInterval(intScroll);
+    }
+});
+
 
 // keyboard shortcut add
 const docKeyup = (e) => {
